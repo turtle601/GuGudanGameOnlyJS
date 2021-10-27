@@ -44,7 +44,6 @@ export default class GuGuDanCategory{
     }
 
     checkboxEvent(){
-
         this.$categoryTag.addEventListener("submit", (e) => {
             e.preventDefault();
             this.props.onSubmit();

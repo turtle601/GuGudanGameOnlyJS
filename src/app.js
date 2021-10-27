@@ -68,15 +68,18 @@ class App {
 
         new GuGuDanNextButton(this.$target, {
             makeTag : this.makeTag.bind(this),
-            setState : this.setState.bind(this),
+            nextQuestion : this.nextQuestion.bind(this),
         });
 
     }
 
-    setState(){
+    nextQuestion(){
         this.makeRandomArray();
+        this.state.answer = ""
+        
         this.guguDanQuestion.render();
         this.guguDanCategory.render();
+        this.guguDanAnswer.setState(this.state);
     }
 
     onSubmit(){
@@ -87,6 +90,7 @@ class App {
         const correctAnswer = first * second // 정답
 
         let inputTagList = document.querySelectorAll("input");
+        
         [...inputTagList].slice(0,5).forEach($inputTag => {
             const {checked, dataset} = $inputTag
             if (checked === true) count += 1;

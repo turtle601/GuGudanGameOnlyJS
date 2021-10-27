@@ -7,7 +7,7 @@ export default class GuGuDanNextButton{
 
         this.render();
 
-        this.next();
+        this.nextBtnEvent();
     }
 
     makeComponent(){
@@ -22,10 +22,10 @@ export default class GuGuDanNextButton{
         this.$nextBtn.innerHTML = this.makeComponent();
     }
 
-    next(){
+    nextBtnEvent(){
         this.$nextBtn.addEventListener("click", (e) => {
             if(e.target.tagName === "BUTTON" && e.target.type === "reset"){
-                this.props.setState();
+                this.props.nextQuestion();
             }
         })
     }
