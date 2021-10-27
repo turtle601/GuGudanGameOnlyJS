@@ -3,25 +3,21 @@ import GuGuDanCategory from './category.js';
 import GuGuDanAnswer from './answer.js';
 import GuGuDanNextButton from './nextBtn.js';
 
-class App {
-    constructor(){
+
+export default class App {
+    constructor(model){
         this.$target = document.querySelector("#root")
 
-        this.state = {
-            
-            first : 0,
-            second : 0,
-            randomArray : [],
-
-            answer : ""
-        }
-
+        this.model = model;
+        this.state = this.model.get();
+        
         this.executeComponent();
     }
 
     makeRandomArray(){
         this.state.first = Math.floor(1 + Math.random() * 9);
         this.state.second = Math.floor(1 + Math.random() * 9);
+        this.state.answer = "";
         
         const {first, second} = this.state;
         
@@ -35,6 +31,8 @@ class App {
         randomArray.sort(() => Math.random() - 0.5);
         
         this.state.randomArray = randomArray;
+
+        this.model.set(this.state);
     }
 
     makeTag(idName){
@@ -48,22 +46,26 @@ class App {
 
     // 생성한 컴포넌트 실행 함수
     executeComponent(){
-        const randomArray = this.makeRandomArray();
-
+        const {state, makeRandomArray, makeTag, onSubmit, nextQuestion} = this
+        if (Object.keys(state).length === 0){
+            console.log(1);
+            this.makeRandomArray();
+        }
+        
         this.guguDanQuestion = new GuGuDanQuestion(this.$target, {
-            state : this.state,
-            makeTag : this.makeTag.bind(this)
+            state : state,
+            makeTag : makeTag.bind(this)
         })        
         
         this.guguDanCategory = new GuGuDanCategory(this.$target, {
-            state : this.state,
-            makeTag : this.makeTag.bind(this),
-            onSubmit : this.onSubmit.bind(this),
+            state : state,
+            makeTag : makeTag.bind(this),
+            onSubmit : onSubmit.bind(this),
         })
 
         this.guguDanAnswer = new GuGuDanAnswer(this.$target, {
-            state : this.state,
-            makeTag : this.makeTag.bind(this),
+            state : state,
+            makeTag : makeTag.bind(this),
         })   
 
         new GuGuDanNextButton(this.$target, {
@@ -75,7 +77,6 @@ class App {
 
     nextQuestion(){
         this.makeRandomArray();
-        this.state.answer = ""
         
         this.guguDanQuestion.render();
         this.guguDanCategory.render();
@@ -104,7 +105,6 @@ class App {
         else copyState.answer = "오답";
 
         this.guguDanAnswer.setState(copyState);
+        this.model.set(copyState);
     }
 }
-
-new App();
